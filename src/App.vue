@@ -5,23 +5,15 @@
         <a href="javascript:;" @click="showClass=!showClass" class="mdui-btn mdui-btn-icon">
           <i class="mdui-icon material-icons">menu</i>
         </a>
-        <a href="javascript:;" class="mdui-typo-title">笔记</a>
+        <a href="javascript:;" class="mdui-typo-title">天气</a>
         <div class="mdui-toolbar-spacer"></div>
         <a
           href="javascript:;"
-          @click="saveData()"
+          @click="handleSearch"
           class="mdui-btn mdui-btn-icon"
-          mdui-tooltip="{content: '保存笔记'}"
+          mdui-tooltip="{content: '搜索地区'}"
         >
-          <i class="mdui-icon material-icons">save</i>
-        </a>
-        <a
-          href="javascript:;"
-          @click="handleAdd"
-          class="mdui-btn mdui-btn-icon"
-          mdui-tooltip="{content: '添加笔记'}"
-        >
-          <i class="mdui-icon material-icons">add</i>
+          <i class="mdui-icon material-icons">search</i>
         </a>
         <a
           @click="open('https://github.com/xkloveme/utools-weather')"
@@ -65,52 +57,134 @@
         </a>
       </div>
     </div>
-    <div :class="{'mdui-drawer-body-left':showClass}">
-      <div
-        class="mdui-drawer"
-        :class="['mdui-drawer',showClass?'mdui-drawer-open':'mdui-drawer-close']"
-        style="top: 50px;"
-      >
-        <list :id="id" @click="handleClick" ref="list" />
-      </div>
-      <div class="mdui-container-fluid">
-        <div class="mdui-row">
-          <editor ref="editor" @onEditorChange="onEditorChange" :msg="msg" :key="index" />
+    <div>
+      <div :class="{'mdui-drawer-body-left':showClass}">
+        <div
+          class="mdui-drawer"
+          :class="['mdui-drawer',showClass?'mdui-drawer-open':'mdui-drawer-close']"
+          style="top: 50px;"
+        >
+          <list @click="handleClick" ref="list" />
+        </div>
+        <div class="mdui-container-fluid">
+          <div class="mdui-row">
+            <!-- <weather /> -->
+            <div ref="weather"></div>
+          </div>
         </div>
       </div>
+      <button @click="handleAddWeather('addonw')">添加天气</button>
+      <button @click="handleAddWeather('addtwo')">添加天气</button>
     </div>
+    <!-- 搜索地区-->
+    <vs-dialog blur v-model="active">
+      <template #header>
+        <h4 class="not-margin">
+          <b>搜索地区</b>
+        </h4>
+      </template>
+
+      <div class="con-form" style="display:flex;justify-content: center;">
+        <vs-input v-model="location" success placeholder="输入地区">
+          <template #icon>
+            <i class="mdui-icon material-icons">search</i>
+          </template>
+        </vs-input>
+        <vs-button gradient @click="handleSearchCity">搜索</vs-button>
+      </div>
+      <div style="min-height:200px;margin-top:20px">
+        <vs-button
+          floating
+          block
+          v-for="(item ,i) in cityList"
+          :key="i+1"
+          @click="handleChangeCity(item.cid)"
+        >{{item.str}}</vs-button>
+      </div>
+    </vs-dialog>
   </div>
 </template>
 
 <script>
-import editor from './components/editor.vue'
+// import editor from './components/editor.vue'
 import list from './components/list.vue'
-
+import Vue from 'vue'
+import weather from './components/weather'
+const Weather = Vue.extend(weather)
 export default {
   name: 'App',
   components: {
-    editor,
+    // weather,
     list
   },
   data() {
     return {
-      id: '',
-      rev: '',
-      msg: '',
-      index: 1,
+      active: false,
+      location: '',
+      cityList: [],
       showClass: false,
-      editData: {}
+      editData: {},
+      list: []
     }
+  },
+  mounted() {
+    this.handleChangeCity()
   },
   methods: {
     open(url) {
       window.openExternal(url)
     },
-    handleAdd() {
-      this.index++
-      this.id = ''
-      this.rev = ''
-      this.msg = ''
+    handleChangeCity(cid) {
+      this.active = false
+      const player = this.$refs['weather']
+      // window.WIDGET = {
+      //   CONFIG: {
+      //     layout: 2,
+      //     width: 100,
+      //     height: 100,
+      //     background: 1,
+      //     dataColor: '9F1111',
+      //     borderRadius: 5,
+      //     city:cid,
+      //     // city: "CN101240103",
+      //     key: '75f7ef04ec64481cb131ff6621b8c8c1'
+      //   }
+      // }
+      console.log('🐛:: handleChangeCity -> window.WIDGET', window.WIDGET)
+      let vm = new Weather({
+        propsData: { config: { city: cid } }
+      }).$mount()
+      player.appendChild(vm.$el)
+    },
+    handleSearch() {
+      this.active = true
+    },
+    handleSearchCity() {
+      this.cityList = []
+      if (this.location) {
+        this.$api.getCityApi(this.location).then(res => {
+          if (res.indexOf('unknown location') === -1) {
+            if (JSON.parse(res).HeWeather6.length) {
+              JSON.parse(res).HeWeather6.map(item => {
+                let arr = []
+                item.basic.cnty && arr.push(item.basic.cnty)
+                item.basic.admin_area && arr.push(item.basic.admin_area)
+                item.basic.parent_city && arr.push(item.basic.parent_city)
+                item.basic.location && arr.push(item.basic.location)
+                let str = arr.join('-')
+                this.cityList.push({ str, cid: item.basic.cid })
+              })
+            }
+          } else {
+            this.$vs.notification({
+              color: 'warn',
+              position: 'top-center',
+              title: '搜索提示',
+              text: '暂未找到相关地区,请换个关键词再试吧'
+            })
+          }
+        })
+      }
     },
     handleClick(item) {
       this.index++
@@ -118,7 +192,7 @@ export default {
       this.id = item['_id']
       this.rev = item['_rev']
     },
-    saveData(data=this.editData) {
+    saveData(data = this.editData) {
       data['_id'] = this.id
       data['_rev'] = this.rev
       this.$api.putApi(data).then(res => {

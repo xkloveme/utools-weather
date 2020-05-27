@@ -105,3 +105,25 @@ export const allDocsApi = (data) => {
     }
   });
 };
+
+// 获取城市
+export const getCityApi = (location) => {
+  return new Promise((resolve, reject) => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    fetch(
+      `https://free-api.heweather.net/s6/weather/now?location=${location}&key=7028306c100b4aac98539d549c53cff7`,
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject("出错");
+        console.log("error", error);
+      });
+  });
+};

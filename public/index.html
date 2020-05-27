@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong
+        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to
+        continue.</strong
+      >
     </noscript>
     <div id="app"></div>
-    <!-- built files will be auto injected -->
+    <link rel="stylesheet" href="<%= BASE_URL %>static/he-standard.css" />
+    <!-- <div id="demo"></div>
+    <script>
+      window.weatherID = "demo";
+      window.WIDGET = {
+        CONFIG: {
+          layout: 1,
+          width: "450",
+          height: "150",
+          background: 1,
+          dataColor: "FFFFFF",
+          borderRadius: 5,
+          key: "75f7ef04ec64481cb131ff6621b8c8c1",
+        },
+      };
+    </script>
+    <script src="./static/he-standard.js" type="text/javascript"></script> -->
   </body>
 </html>
