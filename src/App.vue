@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <div class="mdui-appbar mdui-shadow-0">
+  <div id="app" :class="{'app-bg':bg}" :style="{backgroundImage: 'url(' +bgIMG  + ')'}">
+    <div :style="{color: bg?'#fff':''}" class="mdui-appbar mdui-shadow-0">
       <div class="mdui-toolbar">
         <a href="javascript:;" @click="showClass=!showClass" class="mdui-btn mdui-btn-icon">
           <i class="mdui-icon material-icons">menu</i>
@@ -37,7 +37,7 @@
             <path
               fill-rule="evenodd"
               clip-rule="evenodd"
-              fill="#2c3e50"
+              :fill="bg?'#fff':'#2c3e50'"
               d="M18,1.4C9,1.4,1.7,8.7,1.7,17.7c0,7.2,4.7,13.3,11.1,15.5
 	c0.8,0.1,1.1-0.4,1.1-0.8c0-0.4,0-1.4,0-2.8c-4.5,1-5.5-2.2-5.5-2.2c-0.7-1.9-1.8-2.4-1.8-2.4c-1.5-1,0.1-1,0.1-1
 	c1.6,0.1,2.5,1.7,2.5,1.7c1.5,2.5,3.8,1.8,4.7,1.4c0.1-1.1,0.6-1.8,1-2.2c-3.6-0.4-7.4-1.8-7.4-8.1c0-1.8,0.6-3.2,1.7-4.4
@@ -64,17 +64,15 @@
           :class="['mdui-drawer',showClass?'mdui-drawer-open':'mdui-drawer-close']"
           style="top: 50px;"
         >
-          <list @click="handleClick" ref="list" />
+          <list @changeSet="handleChangeCity" @handleSetBg="handleSetBg" ref="list" />
         </div>
-        <div class="mdui-container-fluid">
+        <div class="mdui-container-fluid" @click="showClass=!showClass">
           <div class="mdui-row">
             <!-- <weather /> -->
             <div ref="weather"></div>
           </div>
         </div>
       </div>
-      <button @click="handleAddWeather('addonw')">添加天气</button>
-      <button @click="handleAddWeather('addtwo')">添加天气</button>
     </div>
     <!-- 搜索地区-->
     <vs-dialog blur v-model="active">
@@ -98,7 +96,7 @@
           block
           v-for="(item ,i) in cityList"
           :key="i+1"
-          @click="handleChangeCity(item.cid)"
+          @click="handleChangeCity({city:item.cid})"
         >{{item.str}}</vs-button>
       </div>
     </vs-dialog>
@@ -124,37 +122,43 @@ export default {
       cityList: [],
       showClass: false,
       editData: {},
-      list: []
+      bg: false,
+      bgIMG: ''
     }
   },
   mounted() {
     this.handleChangeCity()
+    //  this.utools.onPluginReady(() => {
+    //   console.log('插件装配完成，已准备好')
+    //   // this.getData()
+    // })
   },
   methods: {
     open(url) {
       window.openExternal(url)
     },
-    handleChangeCity(cid) {
+    handleChangeCity(config) {
+      this.$api.putApi({ ...config, _id: 'weather' }).then(res => {
+        if (res.ok) {
+          this.utools.showNotification('修改成功')
+        }
+      })
       this.active = false
       const player = this.$refs['weather']
-      // window.WIDGET = {
-      //   CONFIG: {
-      //     layout: 2,
-      //     width: 100,
-      //     height: 100,
-      //     background: 1,
-      //     dataColor: '9F1111',
-      //     borderRadius: 5,
-      //     city:cid,
-      //     // city: "CN101240103",
-      //     key: '75f7ef04ec64481cb131ff6621b8c8c1'
-      //   }
-      // }
-      console.log('🐛:: handleChangeCity -> window.WIDGET', window.WIDGET)
       let vm = new Weather({
-        propsData: { config: { city: cid } }
+        propsData: { config: config }
       }).$mount()
       player.appendChild(vm.$el)
+    },
+    handleSetBg(val) {
+      this.bg = val
+      this.bgIMG = val ? `https://picsum.photos/800/600?t=${new Date().getTime()}` : ''
+      if (val) {
+        const loading = this.$vs.loading()
+        setTimeout(() => {
+          loading.close()
+        }, 2000)
+      }
     },
     handleSearch() {
       this.active = true
@@ -185,26 +189,6 @@ export default {
           }
         })
       }
-    },
-    handleClick(item) {
-      this.index++
-      this.msg = item.content
-      this.id = item['_id']
-      this.rev = item['_rev']
-    },
-    saveData(data = this.editData) {
-      data['_id'] = this.id
-      data['_rev'] = this.rev
-      this.$api.putApi(data).then(res => {
-        this.utools.showNotification('保存成功')
-        if (res.ok) {
-          this.id = res.id
-        }
-        this.$refs['list'].getData()
-      })
-    },
-    onEditorChange(data) {
-      this.editData = data
     }
   }
 }
@@ -217,5 +201,16 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.app-bg {
+  /* color: #fff !important; */
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -moz-background-size: 100% 100%; /*  Firefox 3.6 */
+  -o-background-size: 100% 100%; /* Opera 9.5 */
+  -webkit-background-size: 100% 100%; /* Safari 3.0 */
+  background-size: 100% 100%; /*  Firefox 4.0 and other CSS3-compliant browsers */
+  background-repeat: no-repeat;
 }
 </style>
