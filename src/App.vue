@@ -9,6 +9,14 @@
         <div class="mdui-toolbar-spacer"></div>
         <a
           href="javascript:;"
+          @click="handleReset"
+          class="mdui-btn mdui-btn-icon"
+          mdui-tooltip="{content: '当前天气'}"
+        >
+          <i class="mdui-icon material-icons">gps_fixed</i>
+        </a>
+        <a
+          href="javascript:;"
           @click="handleSearch"
           class="mdui-btn mdui-btn-icon"
           mdui-tooltip="{content: '搜索地区'}"
@@ -66,10 +74,9 @@
         >
           <list @changeSet="handleChangeCity" @handleSetBg="handleSetBg" ref="list" />
         </div>
-        <div class="mdui-container-fluid" @click="showClass=!showClass">
+        <div class="mdui-container-fluid" @click="showClass=false">
           <div class="mdui-row">
-            <!-- <weather /> -->
-            <div ref="weather"></div>
+            <weather ref="weather"></weather>
           </div>
         </div>
       </div>
@@ -104,16 +111,17 @@
 </template>
 
 <script>
-// import editor from './components/editor.vue'
 import list from './components/list.vue'
-import Vue from 'vue'
-import weather from './components/weather'
-const Weather = Vue.extend(weather)
+import weather from './components/weather.vue'
+// import Vue from 'vue'
+// import weather from './components/weather'
+import { mapState } from 'vuex'
+// const Weather = Vue.extend(weather)
 export default {
   name: 'App',
   components: {
-    // weather,
-    list
+    list,
+    weather
   },
   data() {
     return {
@@ -126,29 +134,35 @@ export default {
       bgIMG: ''
     }
   },
+  computed: {
+    ...mapState({
+      config: state => state.config
+    })
+  },
   mounted() {
+    // this.utools.onPluginEnter(({ code, type }) => {
+    // this.$store.dispatch('getConfig').then(() => {
+    //   this.handleChangeCity()
+    // })
     this.handleChangeCity()
-    //  this.utools.onPluginReady(() => {
-    //   console.log('插件装配完成，已准备好')
-    //   // this.getData()
+    // console.log('用户进入插件', code, type)
     // })
   },
   methods: {
     open(url) {
       window.openExternal(url)
     },
+    handleReset() {
+      this.$store.commit('SET_CONFIG', { city: undefined })
+      this.handleChangeCity(this.config)
+    },
     handleChangeCity(config) {
-      this.$api.putApi({ ...config, _id: 'weather' }).then(res => {
-        if (res.ok) {
-          this.utools.showNotification('修改成功')
-        }
-      })
+      this.$store.commit('SET_CONFIG', config)
+      this.$refs['weather'].renderDOM()
       this.active = false
-      const player = this.$refs['weather']
-      let vm = new Weather({
-        propsData: { config: config }
-      }).$mount()
-      player.appendChild(vm.$el)
+      // const player = this.$refs['weather']
+      // let vm = new Weather().$mount()
+      // player.appendChild(vm.$el)
     },
     handleSetBg(val) {
       this.bg = val

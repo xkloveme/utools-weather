@@ -5,9 +5,9 @@
     <ul class="mdui-list">
       <li class="mdui-list-item mdui-ripple">
         <i class="mdui-icon material-icons">crop_original</i>
-        <div class="mdui-list-item-content">{{bg?'背景开':'背景关'}}</div>
+        <div class="mdui-list-item-content">{{config.bg?'背景开':'背景关'}}</div>
         <label class="mdui-switch">
-          <input type="checkbox" @click="handleClickBg" :checked="bg" />
+          <input type="checkbox" @click="handleClickBg" :checked="config.bg" />
           <i class="mdui-switch-icon"></i>
         </label>
       </li>
@@ -57,21 +57,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'list',
   data() {
     return {
       bg: false,
-      config: {
-        layout: 1,
-        width: 600,
-        height: 450,
-        background: 1,
-        dataColor: 'FFFFFF',
-        borderRadius: 5,
-        language: 'zh', // zh en
-        key: '75f7ef04ec64481cb131ff6621b8c8c1'
-      },
       backgroundlist: {
         1: 'brightness_4', // 随天气变化
         2: 'brightness_3', // 浅色
@@ -80,16 +71,10 @@ export default {
       }
     }
   },
-  mounted() {
-    this.getData()
-  },
-  watch: {
-    config: {
-      handler: function(val) {
-        this.$emit('changeSet', { ...val, bg: this.bg })
-      },
-      deep: true //深度监听
-    }
+  computed: {
+    ...mapState({
+      config: state => state.config
+    })
   },
   methods: {
     handleClick(e) {
@@ -100,21 +85,19 @@ export default {
       this.$emit('handleSetBg', this.bg)
     },
     handleLayout() {
+      console.log(this.config, 999)
       if (this.config.layout === 1) {
-        this.config.layout = 2
-        this.config.width = 400
-        this.config.height = 450
+        this.$store.commit('SET_CONFIG', { ...this.config, layout: 2, width: 400, height: 450 })
       } else {
-        this.config.layout = 1
-        this.config.width = 600
-        this.config.height = 450
+        this.$store.commit('SET_CONFIG', { ...this.config, layout: 1, width: 600, height: 450 })
       }
     },
     getData() {
       this.$api.getApi('weather').then(res => {
-        if (!res.error) {
+        if (!res.error && res.layout) {
           this.bg = res.bg
           this.config = res
+          this.rev = res['_rev']
         }
       })
     }

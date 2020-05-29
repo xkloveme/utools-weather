@@ -12,7 +12,8 @@
     "core-js": "^3.6.4",
     "mdui": "^0.4.3",
     "vue": "^2.6.11",
-    "vuesax": "^4.0.1-alpha.18"
+    "vuesax": "^4.0.1-alpha.18",
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",

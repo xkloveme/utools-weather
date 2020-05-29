@@ -1,3 +1,4 @@
+import utoolsDemo from "./utools.js";
 function createRandomId() {
   return (
     new Date().getFullYear() +
@@ -14,6 +15,7 @@ function createRandomId() {
       .substr(2, 5)
   );
 }
+
 export const toLocaleString = function(dateTime) {
   let cdate = new Date(dateTime);
   var year = cdate.getFullYear(); //取得4位数的年份
@@ -32,17 +34,21 @@ export const toLocaleString = function(dateTime) {
   );
 };
 let utools = window.utools;
-
+if (process.env.NODE_ENV === "production") {
+  utools = window.utools || utoolsDemo;
+} else {
+  utools = utoolsDemo;
+}
 // 上传数据更新数据
 export const putApi = (data) => {
   console.log("上传数据更新数据", {
     ...data,
-    _id: data["_id"] || createRandomId(),
+    _id: data["id"] || createRandomId(),
   });
   return new Promise((resolve, reject) => {
     let res = utools.db.put({
       ...data,
-      _id: data["_id"] || createRandomId(),
+      _id: data["id"] || createRandomId(),
     });
     if (res) {
       console.log("🐛:: putApi -> res", res);
@@ -55,7 +61,6 @@ export const putApi = (data) => {
 
 // 获取数据
 export const getApi = (id) => {
-  console.log("🐛:: getApi -> id", id);
   return new Promise((resolve, reject) => {
     let res = utools.db.get(id);
     if (res) {
@@ -110,8 +115,8 @@ export const allDocsApi = (data) => {
 export const getCityApi = (location) => {
   return new Promise((resolve, reject) => {
     var requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
+      method: "GET",
+      redirect: "follow",
     };
     fetch(
       `https://free-api.heweather.net/s6/weather/now?location=${location}&key=7028306c100b4aac98539d549c53cff7`,
