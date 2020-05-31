@@ -19,18 +19,20 @@ export default {
       config: state => state.config
     })
   },
-  watch: {
-    config: {
-      handler: function(val) {
-        console.log('watch:: val', val)
-        this.renderDOM(val)
-      },
-      deep: true //深度监听
-    }
-  },
+  // watch: {
+  //   config: {
+  //     handler: function(val) {
+  //       console.log('watch:: val', val)
+  //       this.renderDOM(val)
+  //     },
+  //     deep: true //深度监听
+  //   }
+  // },
   mounted() {
     window.weatherID = 'demo'
-    // this.renderDOM(this.config)
+    this.$store.dispatch('getConfig').then(res => {
+      this.renderDOM(res)
+    }).catch(()=>{this.renderDOM(this.config)})
   },
   methods: {
     renderDOM(config) {

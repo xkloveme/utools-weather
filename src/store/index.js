@@ -34,7 +34,7 @@ const store = new Vuex.Store({
             if (res.layout) {
               commit("SET_CONFIG", res);
             }
-            resolve();
+            resolve(res);
           })
           .catch((error) => {
             reject(error);

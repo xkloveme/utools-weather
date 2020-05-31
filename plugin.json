@@ -3,16 +3,16 @@
   "description": "天气",
   "version": "0.0.2",
   "main": "dist/index.html",
-  "preload": "public/preload.js",
+  "preload": "dist/preload.js",
   "author": "xkloveme",
-  "homepage": "https://github.com/xkloveme/utools",
-  "logo": "public/icon.png",
+  "homepage": "https://github.com/xkloveme",
+  "logo": "dist/icon.png",
   "features": [
     {
       "code": "weather",
       "explain": "天气",
       "cmds": ["weather", "天气", "温度"],
-      "icon": "public/icon.png"
+      "icon": "dist/icon.png"
     }
   ]
 }

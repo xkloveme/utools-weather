@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="{'app-bg':bg}" :style="{backgroundImage: 'url(' +bgIMG  + ')'}">
-    <Title :bg="bg" @showPopup="showPopup" @handleReset="handleReset" @handleSearch="handleSearch"></Title>
-    <van-popup v-model="show" position="left" :style="{ height: '100%',width:'50%' }">
+    <Title @showPopup="showPopup" @handleReset="handleReset" @handleSearch="handleSearch"></Title>
+    <van-popup v-model="show" position="left" :style="{ height: '100%',width:'30%' }">
       <list @changeSet="handleChangeCity" @handleSetBg="handleSetBg" ref="list" />
     </van-popup>
     <div class="mdui-container-fluid" @click="showClass=false">
@@ -19,9 +19,6 @@
 
       <div class="con-form" style="display:flex;justify-content: center;">
         <vs-input v-model="location" success placeholder="输入地区">
-          <template #icon>
-            <i class="mdui-icon material-icons">search</i>
-          </template>
         </vs-input>
         <vs-button gradient @click="handleSearchCity">搜索</vs-button>
       </div>
@@ -87,12 +84,6 @@ export default {
     handleSetBg(val) {
       this.bg = val
       this.bgIMG = val ? `https://picsum.photos/800/600?t=${new Date().getTime()}` : ''
-      if (val) {
-        const loading = this.$vs.loading()
-        setTimeout(() => {
-          loading.close()
-        }, 2000)
-      }
     },
     handleSearch() {
       this.active = true
@@ -114,7 +105,7 @@ export default {
               })
             }
           } else {
-            this.$toast.fail('暂未找到相关地区,请换个关键词再试吧');
+            this.$toast.fail({message:'暂未找到相关地区,请换个关键词再试吧',className:'me-toast'});
           }
         })
       }
@@ -141,5 +132,8 @@ export default {
   -webkit-background-size: 100% 100%; /* Safari 3.0 */
   background-size: 100% 100%; /*  Firefox 4.0 and other CSS3-compliant browsers */
   background-repeat: no-repeat;
+}
+.me-toast{
+  z-index: 99999999!important;
 }
 </style>

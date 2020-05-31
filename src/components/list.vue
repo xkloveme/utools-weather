@@ -4,7 +4,7 @@
     <div class="mdui-divider"></div>
     <ul class="mdui-list">
       <li class="mdui-list-item mdui-ripple">
-        <i class="mdui-icon material-icons">crop_original</i>
+        <!-- <i class="mdui-icon material-icons">crop_original</i> -->
         <div class="mdui-list-item-content">{{config.bg?'背景开':'背景关'}}</div>
         <label class="mdui-switch">
           <input type="checkbox" @click="handleClickBg" :checked="config.bg" />
@@ -12,9 +12,9 @@
         </label>
       </li>
       <li class="mdui-list-item mdui-ripple">
-        <i
+        <!-- <i
           class="mdui-icon material-icons"
-        >{{config.layout===1?'stay_primary_landscape':'smartphone'}}</i>
+        >{{config.layout===1?'stay_primary_landscape':'smartphone'}}</i>-->
         <div class="mdui-list-item-content">{{config.layout===1?'横版':'竖版'}}</div>
         <label class="mdui-switch">
           <input type="checkbox" @click="handleLayout" :checked="config.layout===2" />
@@ -22,7 +22,7 @@
         </label>
       </li>
       <li class="mdui-list-item mdui-ripple">
-        <i class="mdui-icon material-icons">{{backgroundlist[config.background]}}</i>
+        <!-- <i class="mdui-icon material-icons">{{backgroundlist[config.background]}}</i> -->
         <div class="mdui-list-item-content">背景</div>
         <select class="mdui-select" @change="handleClick">
           <option :value="1" :selected="config.background===1">随天气</option>
@@ -33,7 +33,7 @@
       </li>
 
       <li class="mdui-list-item mdui-ripple">
-        <i class="mdui-icon material-icons">translate</i>
+        <!-- <i class="mdui-icon material-icons">translate</i> -->
         <div class="mdui-list-item-content">{{config.language==='zh'?'中文':'英文'}}</div>
         <label class="mdui-switch">
           <input type="checkbox" @click="handleClickLan()" :checked="config.language==='en'" />
@@ -53,14 +53,14 @@
 </template>
 
 <script>
-// import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: 'list',
   data() {
     return {
       bg: false,
       rev: '',
-      config: {},
+      // config: {},
       backgroundlist: {
         1: 'brightness_4', // 随天气变化
         2: 'brightness_3', // 浅色
@@ -77,10 +77,9 @@ export default {
       this.$emit('changeSet', this.config)
     }
   },
-  mounted() {
-    this.utools.onPluginEnter(({ code, type }) => {
-      this.getData()
-      console.log('用户进入插件', code, type)
+  computed: {
+    ...mapState({
+      config: state => state.config
     })
   },
   methods: {
@@ -115,23 +114,6 @@ export default {
           height: 450
         })
       }
-    },
-    getData() {
-      this.$api
-        .getApi('weather')
-        .then(res => {
-          if (!res.error && res.layout) {
-            this.bg = res.bg
-            this.config = res
-            this.rev = res['_rev']
-            console.log('🐛:: getData -> res', res)
-          }
-          this.$emit('changeSet', res)
-        })
-        .catch(err => {
-          this.$emit('changeSet', {})
-          console.log('🐛:: getData -> err', err)
-        })
     }
   }
 }

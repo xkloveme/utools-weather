@@ -2,7 +2,7 @@
   <div class="title">
     <van-nav-bar title="天气">
       <template #left>
-        <van-icon name="wap-nav" @click="showPopup" color="#2c3e50" size="32px" />
+        <van-icon name="wap-nav" @click="showPopup"  color="#2c3e50" size="32px" />
       </template>
       <template #right>
         <a class="title-icon" @click="handleReset" title="当前天气">
@@ -32,7 +32,7 @@
             <path
               fill-rule="evenodd"
               clip-rule="evenodd"
-              :fill="bg?'#fff':'#2c3e50'"
+              fill="#2c3e50"
               d="M18,1.4C9,1.4,1.7,8.7,1.7,17.7c0,7.2,4.7,13.3,11.1,15.5
 	c0.8,0.1,1.1-0.4,1.1-0.8c0-0.4,0-1.4,0-2.8c-4.5,1-5.5-2.2-5.5-2.2c-0.7-1.9-1.8-2.4-1.8-2.4c-1.5-1,0.1-1,0.1-1
 	c1.6,0.1,2.5,1.7,2.5,1.7c1.5,2.5,3.8,1.8,4.7,1.4c0.1-1.1,0.6-1.8,1-2.2c-3.6-0.4-7.4-1.8-7.4-8.1c0-1.8,0.6-3.2,1.7-4.4
@@ -56,7 +56,6 @@
 
 <script>
 export default {
-  props: ['bg'],
   methods: {
     open(url) {
       window.openExternal(url)
