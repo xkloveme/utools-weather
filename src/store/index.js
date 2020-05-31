@@ -18,7 +18,11 @@ const store = new Vuex.Store({
   },
   mutations: {
     SET_CONFIG: (state, config) => {
-      state.config = { ...state.config, ...config };
+      for (const key in config) {
+        if (config[key]) {
+          state.config[key] = config[key];
+        }
+      }
     },
   },
   actions: {

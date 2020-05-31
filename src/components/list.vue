@@ -36,11 +36,7 @@
         <i class="mdui-icon material-icons">translate</i>
         <div class="mdui-list-item-content">{{config.language==='zh'?'中文':'英文'}}</div>
         <label class="mdui-switch">
-          <input
-            type="checkbox"
-            @click="config.language==='zh'?(config.language='en'):(config.language='zh')"
-            :checked="config.language==='en'"
-          />
+          <input type="checkbox" @click="handleClickLan()" :checked="config.language==='en'" />
           <i class="mdui-switch-icon"></i>
         </label>
       </li>
@@ -57,12 +53,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 export default {
   name: 'list',
   data() {
     return {
       bg: false,
+      rev: '',
+      config: {},
       backgroundlist: {
         1: 'brightness_4', // 随天气变化
         2: 'brightness_3', // 浅色
@@ -71,35 +69,69 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapState({
-      config: state => state.config
+  watch: {
+    'config.width'() {
+      this.$emit('changeSet', this.config)
+    },
+    'config.height'() {
+      this.$emit('changeSet', this.config)
+    }
+  },
+  mounted() {
+    this.utools.onPluginEnter(({ code, type }) => {
+      this.getData()
+      console.log('用户进入插件', code, type)
     })
   },
   methods: {
     handleClick(e) {
       this.config.background = e.target.value
+      this.$emit('changeSet', this.config)
+    },
+    handleClickLan() {
+      this.config.language === 'zh' ? (this.config.language = 'en') : (this.config.language = 'zh')
+      this.$emit('changeSet', this.config)
     },
     handleClickBg() {
       this.bg = !this.bg
       this.$emit('handleSetBg', this.bg)
     },
+    onSubmit() {},
     handleLayout() {
-      console.log(this.config, 999)
       if (this.config.layout === 1) {
-        this.$store.commit('SET_CONFIG', { ...this.config, layout: 2, width: 400, height: 450 })
+        this.$emit('changeSet', {
+          ...this.config,
+          _rev: this.rev,
+          layout: 2,
+          width: 400,
+          height: 450
+        })
       } else {
-        this.$store.commit('SET_CONFIG', { ...this.config, layout: 1, width: 600, height: 450 })
+        this.$emit('changeSet', {
+          ...this.config,
+          _rev: this.rev,
+          layout: 1,
+          width: 600,
+          height: 450
+        })
       }
     },
     getData() {
-      this.$api.getApi('weather').then(res => {
-        if (!res.error && res.layout) {
-          this.bg = res.bg
-          this.config = res
-          this.rev = res['_rev']
-        }
-      })
+      this.$api
+        .getApi('weather')
+        .then(res => {
+          if (!res.error && res.layout) {
+            this.bg = res.bg
+            this.config = res
+            this.rev = res['_rev']
+            console.log('🐛:: getData -> res', res)
+          }
+          this.$emit('changeSet', res)
+        })
+        .catch(err => {
+          this.$emit('changeSet', {})
+          console.log('🐛:: getData -> err', err)
+        })
     }
   }
 }

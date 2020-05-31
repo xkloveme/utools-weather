@@ -10,9 +10,8 @@
   },
   "dependencies": {
     "core-js": "^3.6.4",
-    "mdui": "^0.4.3",
     "vue": "^2.6.11",
-    "vuesax": "^4.0.1-alpha.18",
+    "vuesax": "^4.0.1-alpha.20",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
@@ -20,8 +19,10 @@
     "@vue/cli-plugin-eslint": "~4.3.0",
     "@vue/cli-service": "~4.3.0",
     "babel-eslint": "^10.1.0",
+    "babel-plugin-import": "^1.13.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "vant": "^2.8.4",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {

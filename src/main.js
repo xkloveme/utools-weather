@@ -1,16 +1,17 @@
 import Vue from "vue";
 import App from "./App.vue";
-import "mdui/dist/css/mdui.css";
-import "mdui/dist/js/mdui.js";
+// import "mdui/dist/css/mdui.css";
+// import "mdui/dist/js/mdui.js";
 import Api from "./utils/index";
-import Vuesax from "vuesax";
 import store from "./store";
+import Vant from './vant.js'
 
-import "vuesax/dist/vuesax.css"; //Vuesax styles
-Vue.use(Vuesax, {
-  // options here
-});
+import 'vuesax/dist/vuesax.min.css'
 
+Vue.use(Vant)
+// Vue.use(vsButton)
+// Vue.use(vsInput)
+// Vue.use(vsDialog)
 Vue.config.productionTip = false;
 Vue.prototype.utools = window.utools;
 Vue.prototype.$api = Api;

@@ -1,6 +1,6 @@
 # 天气 温度
 
-![img](https://s1.ax1x.com/2020/05/24/Yz4J6P.png)
+![tKKn5n.png](https://s1.ax1x.com/2020/05/29/tKKn5n.png)
 
 # ☁️🌞 一个简单的天气
 
@@ -9,14 +9,14 @@
 ![image](https://github.com/aleen42/badges/raw/master/src/vue_flat_square.svg?sanitize=true)
 ![image](https://github.com/aleen42/badges/raw/master/src/javascript_flat_square.svg?sanitize=true)
 
-![tkvHe0.gif](https://s1.ax1x.com/2020/05/27/tkvHe0.gif)
+![tMtLZt.gif](https://s1.ax1x.com/2020/05/30/tMtLZt.gif)
 
 ## 地址
 
 - [项目源码](https://github.com/xkloveme/utools-weather)
 - [反馈](https://github.com/xkloveme/utools-weather/issues)
 
-## note 插件
+## 天气插件
 
 1. 全平台支持. windows, mac, linux.
 2. 支持平台同步显示天气配置
@@ -29,6 +29,7 @@
 
 - ### 0.0.1
 > - 上架应用市场
+> - 三剑客之天气,欢迎搜索笔记和日历
 
 ## 关注我
 
