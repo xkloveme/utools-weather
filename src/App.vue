@@ -18,8 +18,7 @@
       </template>
 
       <div class="con-form" style="display:flex;justify-content: center;">
-        <vs-input v-model="location" success placeholder="输入地区">
-        </vs-input>
+        <vs-input v-model="location" success placeholder="输入地区"></vs-input>
         <vs-button gradient @click="handleSearchCity">搜索</vs-button>
       </div>
       <div style="min-height:200px;margin-top:20px">
@@ -67,14 +66,30 @@ export default {
       config: state => state.config
     })
   },
+  mounted() {
+    this.$api.allDocsApi('weather').then(res => {
+      if (!res.length) {
+        this.handleReset()
+      }
+    })
+  },
   methods: {
     showPopup() {
       this.show = true
     },
     handleReset() {
-      this.handleChangeCity({ ...this.config, city: undefined })
+      this.$api.getCityApi('auto_ip').then(res => {
+        if (res.indexOf('unknown location') === -1) {
+          if (JSON.parse(res).HeWeather6.length) {
+            JSON.parse(res).HeWeather6.map(item => {
+              this.handleChangeCity({ ...this.config, city: item.basic.cid })
+            })
+          }
+        }
+      })
     },
     handleChangeCity(config) {
+      this.$store.commit('SET_CONFIG', config)
       this.$refs['weather'].renderDOM({ ...this.config, ...config })
       this.active = false
       // const player = this.$refs['weather']
@@ -105,7 +120,10 @@ export default {
               })
             }
           } else {
-            this.$toast.fail({message:'暂未找到相关地区,请换个关键词再试吧',className:'me-toast'});
+            this.$toast.fail({
+              message: '暂未找到相关地区,请换个关键词再试吧',
+              className: 'me-toast'
+            })
           }
         })
       }
@@ -133,7 +151,7 @@ export default {
   background-size: 100% 100%; /*  Firefox 4.0 and other CSS3-compliant browsers */
   background-repeat: no-repeat;
 }
-.me-toast{
-  z-index: 99999999!important;
+.me-toast {
+  z-index: 99999999 !important;
 }
 </style>
