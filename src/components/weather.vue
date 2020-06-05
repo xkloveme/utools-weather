@@ -10,8 +10,8 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      publicPath: process.env.BASE_URL,
-      rev: ''
+      rev: '',
+      publicPath: process.env.BASE_URL
     }
   },
   computed: {
@@ -19,20 +19,19 @@ export default {
       config: state => state.config
     })
   },
-  // watch: {
-  //   config: {
-  //     handler: function(val) {
-  //       console.log('watch:: val', val)
-  //       this.renderDOM(val)
-  //     },
-  //     deep: true //深度监听
-  //   }
-  // },
   mounted() {
     window.weatherID = 'demo'
-    this.$store.dispatch('getConfig').then(res => {
-      this.renderDOM(res)
-    }).catch(()=>{this.renderDOM(this.config)})
+    // eslint-disable-next-line no-undef
+    utools.onPluginEnter(() => {
+      this.$store
+        .dispatch('getConfig')
+        .then(res => {
+          this.renderDOM(res)
+        })
+        .catch(() => {
+          this.renderDOM(this.config)
+        })
+    })
   },
   methods: {
     renderDOM(config) {
@@ -44,7 +43,7 @@ export default {
       s.src = `${this.publicPath}static/he-standard.js`
       var sn = document.getElementsByTagName('script')[0]
       sn.parentNode.insertBefore(s, sn)
-      this.$api.putApi({ ...config, _rev: config._rev || this.rev, id: 'weather' }).then(res => {
+      this.$api.putApi({ ...config, _rev: this.rev || config._rev, id: 'weather' }).then(res => {
         if (res.ok) {
           this.rev = res.rev
         }

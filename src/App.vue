@@ -73,6 +73,11 @@ export default {
       }
     })
   },
+  watch: {
+    'config.bg'(val) {
+      this.handleSetBg(val)
+    }
+  },
   methods: {
     showPopup() {
       this.show = true

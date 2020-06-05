@@ -59,8 +59,6 @@ export default {
   data() {
     return {
       bg: false,
-      rev: '',
-      // config: {},
       backgroundlist: {
         1: 'brightness_4', // 随天气变化
         2: 'brightness_3', // 浅色
@@ -84,31 +82,31 @@ export default {
   },
   methods: {
     handleClick(e) {
-      this.config.background = e.target.value
-      this.$emit('changeSet', this.config)
+      let background = e.target.value
+      this.$emit('changeSet', { background: background })
     },
     handleClickLan() {
-      this.config.language === 'zh' ? (this.config.language = 'en') : (this.config.language = 'zh')
-      this.$emit('changeSet', this.config)
+      let language = ''
+      this.config.language === 'zh' ? (language = 'en') : (language = 'zh')
+      this.$emit('changeSet', {
+        language: language
+      })
     },
     handleClickBg() {
       this.bg = !this.bg
-      this.$emit('handleSetBg', this.bg)
+      this.$emit('changeSet', { bg: this.bg })
+      this.$emit('handleSetBg', { bg: this.bg })
     },
     onSubmit() {},
     handleLayout() {
       if (this.config.layout === 1) {
         this.$emit('changeSet', {
-          ...this.config,
-          _rev: this.rev,
           layout: 2,
           width: 400,
           height: 450
         })
       } else {
         this.$emit('changeSet', {
-          ...this.config,
-          _rev: this.rev,
           layout: 1,
           width: 600,
           height: 450
