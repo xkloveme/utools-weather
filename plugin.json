@@ -1,7 +1,7 @@
 {
   "pluginName": "weather",
   "description": "天气",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist/index.html",
   "preload": "dist/preload.js",
   "author": "xkloveme",
