@@ -9,8 +9,7 @@ const store = new Vuex.Store({
       layout: 1,
       width: 600,
       height: 450,
-      background: 1,
-      dataColor: "FFFFFF",
+      background: 3,
       borderRadius: 5,
       language: "zh", // zh en
       key: "75f7ef04ec64481cb131ff6621b8c8c1",

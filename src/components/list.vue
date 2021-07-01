@@ -3,13 +3,16 @@
     <h2>个性配置</h2>
     <div class="mdui-divider"></div>
     <ul class="mdui-list">
-      <li class="mdui-list-item mdui-ripple">
+      <li class="mdui-list-item mdui-ripple" @click="handleClickBg">
         <!-- <i class="mdui-icon material-icons">crop_original</i> -->
-        <div class="mdui-list-item-content">{{config.bg?'背景开':'背景关'}}</div>
-        <label class="mdui-switch">
-          <input type="checkbox" @click="handleClickBg" :checked="config.bg" />
-          <i class="mdui-switch-icon"></i>
-        </label>
+        <div class="mdui-list-item-content">随机背景</div>
+         <van-icon name="exchange" />
+        <!-- <label class="mdui-switch"> -->
+          <!-- <input type="checkbox"  :checked="config.bg" /> -->
+          <!-- <i class="mdui-switch-icon"></i> -->
+          <!-- <i class="mdui-icon material-icons">&#xe86a;</i> -->
+         
+        <!-- </label> -->
       </li>
       <li class="mdui-list-item mdui-ripple">
         <!-- <i
