@@ -17,11 +17,13 @@ const store = new Vuex.Store({
   },
   mutations: {
     SET_CONFIG: (state, config) => {
+      let obj = {}
       for (const key in config) {
         if (config[key]) {
-          state.config[key] = config[key];
+          obj[key] = config[key];
         }
       }
+      state.config ={...state.config,...obj,background:1}
     },
   },
   actions: {

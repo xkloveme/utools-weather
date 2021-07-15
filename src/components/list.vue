@@ -24,8 +24,8 @@
           <i class="mdui-switch-icon"></i>
         </label>
       </li>
-      <li class="mdui-list-item mdui-ripple">
         <!-- <i class="mdui-icon material-icons">{{backgroundlist[config.background]}}</i> -->
+      <!-- <li class="mdui-list-item mdui-ripple">
         <div class="mdui-list-item-content">背景</div>
         <select class="mdui-select" @change="handleClick">
           <option :value="1" :selected="config.background===1">随天气</option>
@@ -33,7 +33,7 @@
           <option :value="3" :selected="config.background===3">深色</option>
           <option :value="5" :selected="config.background===5">透明</option>
         </select>
-      </li>
+      </li> -->
 
       <li class="mdui-list-item mdui-ripple">
         <!-- <i class="mdui-icon material-icons">translate</i> -->
